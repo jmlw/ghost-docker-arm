@@ -1,26 +1,24 @@
-FROM alexellis2/nodejs-armhf:6.9.2
+FROM arm32v7/node:8.11.3
 
 USER root
-WORKDIR /root/
-
-RUN mkdir -p /var/www/ghost 
-WORKDIR /var/www/ghost/
-
-RUN apt-get -qy update && \
-    apt-get -qy install --no-install-recommends \
-     curl ca-certificates unzip && \
-     curl -sSLO https://github.com/TryGhost/Ghost/releases/download/0.11.8/Ghost-0.11.8.zip && \
-     rm -rf /var/lib/apt/lists/* && \
-     unzip Ghost-0.11.8.zip
-
-RUN useradd ghost -m -G www-data -s /bin/bash
-RUN chown ghost:www-data .
-RUN chown ghost:www-data -R *
-RUN npm install -g pm2
+WORKDIR /var/www/
+RUN mkdir -p ghost && \
+    apt-get update && \
+    apt-get -qy install wget unzip && \
+    wget https://github.com/TryGhost/Ghost/releases/download/1.25.2/Ghost-1.25.2.zip -o ghost.zip && \
+    unzip ghost.zip -d ghost && \
+    rm ghost.zip && \
+    apt-get -y remove wget unzip && \
+    rm -rf /var/lib/apt/lists/* && \
+    useradd ghost -m -G www-data -s /bin/bash && \
+    chown ghost:www-data . && \
+    chown ghost:www-data ghost && \
+    chown ghost:www-data -R ghost/* && \
+    npm install -g pm2
 
 USER ghost
 WORKDIR /var/www/ghost
-#RUN npm install sqlite3
+RUN /bin/bash -c "time (npm install sqlite3)"
 RUN npm install
 
 EXPOSE 2368

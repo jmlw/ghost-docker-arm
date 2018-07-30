@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:4.5
+FROM mhart/alpine-node:8.11
 
 RUN apk --update add unzip curl
 
@@ -8,9 +8,9 @@ WORKDIR /root/
 WORKDIR /var/www/
 RUN mkdir -p ghost
 
-RUN curl -sSLO https://github.com/TryGhost/Ghost/releases/download/0.11.4/Ghost-0.11.4.zip && \
-    unzip ./*.zip -d ghost && \
-    rm ./*.zip
+RUN curl -sSLO https://github.com/TryGhost/Ghost/releases/download/1.25.2/Ghost-1.25.2.zip -o ghost.zip && \
+    unzip ghost.zip -d ghost && \
+    rm ghost.zip
 
 RUN addgroup www-data
 RUN adduser ghost -G www-data -S /bin/bash
