@@ -1,4 +1,4 @@
-NS = alexellis2
+NS = jmlw
 VERSION ?= armv7-1.25.2
 REPO = ghost-docker-arm
 
